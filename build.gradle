@@ -8,6 +8,8 @@
 // build logic to this file where necessary.
 //
 
+import groovy.json.JsonOutput
+
 buildscript {
     repositories {
         mavenCentral()
@@ -64,10 +66,6 @@ afterEvaluate {
         jvmArguments = "-Dmacros.modules=" + modules.split(",").collect{mod -> "$basePackage.$mod"}.join(',')
     }
 
-    runClient {
-        jvmArgs "-Dmacros.modules=" + modules.split(",").collect{mod -> "$basePackage.$mod"}.join(',')
-    }
-
     // Get the resolved Macros API version in order to decorate the jar
     def deobfResolved = configurations.deobfCompile.resolvedConfiguration.resolvedArtifacts
     def apiVersion = deobfResolved.findAll({it.name == "macrosapi"})[0].moduleVersion.id.version
@@ -84,5 +82,32 @@ afterEvaluate {
     sourceJar {
         baseName = jar.baseName
         classifier = jar.classifier + "-sources"
+    }
+}
+
+task vscode() {
+    group = "IDE"
+    description = "Generates VS Code launch.json"
+
+    doLast() {
+        def json = JsonOutput.toJson([
+            "version": "0.2.0",
+            "configurations": [
+                [
+                    "type": "java",
+                    "name": "Minecraft Client",
+                    "request": "launch",
+                    "cwd": "\${workspaceFolder}/run",
+                    "console": "internalConsole",
+                    "stopOnEntry": false,
+                    "mainClass": "GradleStart",
+                    "vmArgs": "-Dmacros.modules=" + modules.split(",").collect{mod -> "$basePackage.$mod"}.join(','),
+                    "args": ""
+                ]
+            ]
+        ])
+
+        def launchFile = new File(".vscode/launch.json")
+        launchFile.write(JsonOutput.prettyPrint(json))
     }
 }
