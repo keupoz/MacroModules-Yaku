@@ -21,14 +21,15 @@ public class ScriptActionPickMod extends ScriptAction {
         super(context, "pickmod");
     }
 
-    public IReturnValue execute(IScriptActionProvider provider, IMacro macro, IMacroAction instance, String rawParams, String[] params) {
+    @Override
+    public IReturnValue execute(IScriptActionProvider provider, IMacro macro, IMacroAction instance, String rawParams,
+            String[] params) {
         ReturnValue retVal = new ReturnValue(-1);
 
         String lastParam = provider.expand(macro, params[params.length - 1], false).toLowerCase();
         boolean pickInCreative = false;
 
         int idsLength = params.length;
-
 
         if (lastParam.equals("true") || lastParam.equals("false")) {
             pickInCreative = lastParam.equals("true");
@@ -48,6 +49,7 @@ public class ScriptActionPickMod extends ScriptAction {
         return retVal;
     }
 
+    @Override
     public void onInit() {
         this.context.getCore().registerScriptAction(this);
     }

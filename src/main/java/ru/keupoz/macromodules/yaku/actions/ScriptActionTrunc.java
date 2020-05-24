@@ -21,7 +21,9 @@ public class ScriptActionTrunc extends ScriptAction {
         super(context, "trunc");
     }
 
-    public IReturnValue execute(IScriptActionProvider provider, IMacro macro, IMacroAction instance, String rawParams, String[] params) {
+    @Override
+    public IReturnValue execute(IScriptActionProvider provider, IMacro macro, IMacroAction instance, String rawParams,
+            String[] params) {
         ReturnValue retVal = new ReturnValue(0);
 
         float number = ScriptCore.tryParseFloat(provider.expand(macro, params[0], false), 0F);
@@ -30,11 +32,12 @@ public class ScriptActionTrunc extends ScriptAction {
             number -= number % 1;
         }
 
-        retVal.setInt((int)number);
+        retVal.setInt((int) number);
 
         return retVal;
     }
 
+    @Override
     public void onInit() {
         this.context.getCore().registerScriptAction(this);
     }

@@ -21,7 +21,9 @@ public class ScriptActionMod extends ScriptAction {
         super(context, "mod");
     }
 
-    public IReturnValue execute(IScriptActionProvider provider, IMacro macro, IMacroAction instance, String rawParams, String[] params) {
+    @Override
+    public IReturnValue execute(IScriptActionProvider provider, IMacro macro, IMacroAction instance, String rawParams,
+            String[] params) {
         ReturnValue retVal = new ReturnValue(0);
 
         int divident = ScriptCore.tryParseInt(provider.expand(macro, params[0], false), 0);
@@ -32,6 +34,7 @@ public class ScriptActionMod extends ScriptAction {
         return retVal;
     }
 
+    @Override
     public void onInit() {
         this.context.getCore().registerScriptAction(this);
     }

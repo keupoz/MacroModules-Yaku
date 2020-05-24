@@ -21,7 +21,9 @@ public class ScriptActionCalcStacks extends ScriptAction {
         super(context, "calcstacks");
     }
 
-    public IReturnValue execute(IScriptActionProvider provider, IMacro macro, IMacroAction instance, String rawParams, String[] params) {
+    @Override
+    public IReturnValue execute(IScriptActionProvider provider, IMacro macro, IMacroAction instance, String rawParams,
+            String[] params) {
         int count = ScriptCore.tryParseInt(provider.expand(macro, params[0], false), 0);
         int stacks = count / 64;
         int leftovers = count % 64;
@@ -37,6 +39,7 @@ public class ScriptActionCalcStacks extends ScriptAction {
         return new ReturnValue(String.format("%d items form %d stacks and %d items", count, stacks, leftovers));
     }
 
+    @Override
     public void onInit() {
         this.context.getCore().registerScriptAction(this);
     }
